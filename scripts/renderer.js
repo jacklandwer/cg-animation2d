@@ -18,11 +18,32 @@ class Renderer {
         this.ball_dir = { x: 5 / this.fps, y: 5 / this.fps };
         this.ball_radius = 20;
 
+        this.finalbp1 = {x: 300, y: 300};
+        this.finalbp2 = {x: 350, y: 300};
+        this.finalbp3 = {x: 400, y: 300};
+        this.finalbp4 = {x: 450, y: 300};
+        this.finalbp5 = {x: 500, y: 300};
+        this.finalbr = 15;
+        this.finals1 = 1.5;
+        this.finals2 = 1.375;
+        this.finals3 = 1.25;
+        this.finals4 = 1.125;
+        this.finals5 = 1;
+        this.finalsd1 = 0.0006;
+        this.finalsd2 = 0.0006;
+        this.finalsd3 = 0.0006;
+        this.finalsd4 = 0.0006;
+        this.finalsd5 = 0.0006;
+
         this.scale = 1
         this.scalex = 1
         this.scaley = 1
         this.scale_dir = 0.002
         this.scale_dir2 = 0.001
+        
+
+        this.finalx = 200;
+        this.finald = {x: 1/this.fps};
     }
 
     // flag:  bool
@@ -101,6 +122,33 @@ class Renderer {
         if(this.scaley > 1.5 || this.scaley < -1.5 ){
             this.scale_dir2 *= -1;
         }
+
+        this.finalx += this.finald.x * delta_time;
+
+        if(this.finalx >600){
+            this.finalx = 200;
+        }
+
+        this.finals1 += this.finalsd1 * delta_time;
+        if(this.finals1 > 1.5 || this.finals1 < 1 ){
+            this.finalsd1 *= -1;
+        }
+        this.finals2 += this.finalsd2 * delta_time;
+        if(this.finals2 > 1.5 || this.finals2 < 1 ){
+            this.finalsd2 *= -1;
+        }
+        this.finals3 += this.finalsd3 * delta_time;
+        if(this.finals3 > 1.5 || this.finals3 < 1 ){
+            this.finalsd3 *= -1;
+        }
+        this.finals4 += this.finalsd4 * delta_time;
+        if(this.finals4 > 1.5 || this.finals4 < 1 ){
+            this.finalsd4 *= -1;
+        }
+        this.finals5 += this.finalsd5 * delta_time;
+        if(this.finals5 > 1.5 || this.finals5 < 1 ){
+            this.finalsd5 *= -1;
+        }
     }
     
     //
@@ -141,7 +189,7 @@ class Renderer {
             let y = this.ball_pos.y + this.ball_radius * Math.sin(angle);
             vertices.push(Vector3(x, y, 1));
         }
-        this.drawConvexPolygon(vertices, blue)
+        this.drawConvexPolygon(vertices, blue);
     }
 
     //
@@ -185,8 +233,67 @@ class Renderer {
         // TODO: get creative!
         //   - animation should involve all three basic transformation types
         //     (translation, scaling, and rotation)
+        let blue = [0,0,0,255];
+        let loadbar = [
+            new Vector3(200, 200, 1),
+            new Vector3(200, 150, 1),
+            new Vector3(0+this.finalx, 150, 1),
+            new Vector3(0+this.finalx, 200, 1),
+        ];
         
-        
+        this.drawConvexPolygon(loadbar, blue);
+
+        let numSegments = 30; // number of line segments used to approximate the circle
+
+        let ball1 = [];
+
+        for (let i = 0; i < numSegments; i++) {
+            let angle = 2 * Math.PI * i / numSegments;
+            let x = this.finalbp1.x + this.finalbr * Math.cos(angle)*this.finals1;
+            let y = this.finalbp1.y + this.finalbr * Math.sin(angle)*this.finals1;
+            ball1.push(Vector3(x, y, 1));
+        }
+        this.drawConvexPolygon(ball1, blue);
+
+        let ball2 = [];
+
+        for (let i = 0; i < numSegments; i++) {
+            let angle = 2 * Math.PI * i / numSegments;
+            let x = this.finalbp2.x + this.finalbr * Math.cos(angle)*this.finals2;
+            let y = this.finalbp2.y + this.finalbr * Math.sin(angle)*this.finals2;
+            ball2.push(Vector3(x, y, 1));
+        }
+        this.drawConvexPolygon(ball2, blue);
+
+        let ball3 = [];
+
+        for (let i = 0; i < numSegments; i++) {
+            let angle = 2 * Math.PI * i / numSegments;
+            let x = this.finalbp3.x + this.finalbr * Math.cos(angle)*this.finals3;
+            let y = this.finalbp3.y + this.finalbr * Math.sin(angle)*this.finals3;
+            ball3.push(Vector3(x, y, 1));
+        }
+        this.drawConvexPolygon(ball3, blue);
+
+        let ball4 = [];
+
+        for (let i = 0; i < numSegments; i++) {
+            let angle = 2 * Math.PI * i / numSegments;
+            let x = this.finalbp4.x + this.finalbr * Math.cos(angle)*this.finals4;
+            let y = this.finalbp4.y + this.finalbr * Math.sin(angle)*this.finals4;
+            ball4.push(Vector3(x, y, 1));
+        }
+        this.drawConvexPolygon(ball4, blue);
+
+        let ball5 = [];
+
+        for (let i = 0; i < numSegments; i++) {
+            let angle = 2 * Math.PI * i / numSegments;
+            let x = this.finalbp5.x + this.finalbr * Math.cos(angle)*this.finals5;
+            let y = this.finalbp5.y + this.finalbr * Math.sin(angle)*this.finals5;
+            ball5.push(Vector3(x, y, 1));
+        }
+        this.drawConvexPolygon(ball5, blue);
     }
     
     // vertex_list:  array of object [Matrix(3, 1), Matrix(3, 1), ..., Matrix(3, 1)]
