@@ -19,7 +19,8 @@ class Renderer {
         this.ball_radius = 20;
 
         this.scale = 1
-        this.scale2 = 1
+        this.scalex = 1
+        this.scaley = 1
         this.scale_dir = 0.002
         this.scale_dir2 = 0.001
     }
@@ -88,12 +89,16 @@ class Renderer {
         }
  
         this.scale += this.scale_dir * delta_time;
-        this.scale2 += this.scale_dir2 * delta_time;
+        this.scalex += this.scale_dir * delta_time;
+        this.scaley += this.scale_dir2 * delta_time;
 
         if(this.scale > 1.5 || this.scale < -1.5 ){
             this.scale_dir *= -1;
         }
-        if(this.scale2 > 1.5 || this.scale2 < -1.5 ){
+        if(this.scalex > 1.5 || this.scalex < -1.5 ){
+            this.scale_dir2 *= -1;
+        }
+        if(this.scaley > 1.5 || this.scaley < -1.5 ){
             this.scale_dir2 *= -1;
         }
     }
@@ -160,10 +165,10 @@ class Renderer {
         ];
         let polygon2 = [
             //center = 600, 325
-            new Vector3(600 - this.scale2*125, 325 - this.scale2*25, 1),
-            new Vector3(600 - this.scale2*25, 325 - this.scale2*75, 1),
-            new Vector3(600 + this.scale2 *125, 325 + this.scale2*25, 1),
-            new Vector3(600 - this.scale2*75, 325 + this.scale2*75, 1),
+            new Vector3(600 - this.scalex*125, 325 - this.scaley*25, 1),
+            new Vector3(600 - this.scalex*25, 325 - this.scaley*75, 1),
+            new Vector3(600 + this.scalex *125, 325 + this.scaley*25, 1),
+            new Vector3(600 - this.scalex*75, 325 + this.scaley*75, 1),
 
         ];
 
