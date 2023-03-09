@@ -12,6 +12,16 @@ class Renderer {
         this.fps = fps;
         this.start_time = null;
         this.prev_time = null;
+
+        // Ball properties
+        this.ball_pos = { x: 50, y: 50 };
+        this.ball_dir = { x: 5 / this.fps, y: 5 / this.fps };
+        this.ball_radius = 20;
+
+        this.scale = 1
+        this.scale2 = 1
+        this.scale_dir = 0.002
+        this.scale_dir2 = 0.001
     }
 
     // flag:  bool
@@ -66,6 +76,26 @@ class Renderer {
     //
     updateTransforms(time, delta_time) {
         // TODO: update any transformations needed for animation
+        this.ball_pos.x += this.ball_dir.x * delta_time;
+        this.ball_pos.y += this.ball_dir.y * delta_time;
+ 
+        // Check for collision with edges and reverse direction if necessary
+        if (this.ball_pos.x + this.ball_radius > this.canvas.width || this.ball_pos.x - this.ball_radius < 0) {
+            this.ball_dir.x *= -1;
+        }
+        if (this.ball_pos.y + this.ball_radius > this.canvas.height || this.ball_pos.y - this.ball_radius < 0) {
+            this.ball_dir.y *= -1;
+        }
+ 
+        this.scale += this.scale_dir * delta_time;
+        this.scale2 += this.scale_dir2 * delta_time;
+
+        if(this.scale > 1.5 || this.scale < -1.5 ){
+            this.scale_dir *= -1;
+        }
+        if(this.scale2 > 1.5 || this.scale2 < -1.5 ){
+            this.scale_dir2 *= -1;
+        }
     }
     
     //
@@ -95,14 +125,18 @@ class Renderer {
         
         // Following line is example of drawing a single polygon
         // (this should be removed/edited after you implement the slide)
-        let diamond = [
-            Vector3(400, 150, 1),
-            Vector3(500, 300, 1),
-            Vector3(400, 450, 1),
-            Vector3(300, 300, 1)
-        ];
-        let teal = [0, 128, 128, 255];
-        this.drawConvexPolygon(diamond, teal);
+        let blue = [0, 0, 0, 255];
+        let numSegments = 30; // number of line segments used to approximate the circle
+
+        let vertices = [];
+
+        for (let i = 0; i < numSegments; i++) {
+            let angle = 2 * Math.PI * i / numSegments;
+            let x = this.ball_pos.x + this.ball_radius * Math.cos(angle);
+            let y = this.ball_pos.y + this.ball_radius * Math.sin(angle);
+            vertices.push(Vector3(x, y, 1));
+        }
+        this.drawConvexPolygon(vertices, blue)
     }
 
     //
@@ -118,7 +152,26 @@ class Renderer {
         // TODO: draw at least 2 polygons grow and shrink about their own centers
         //   - have each polygon grow / shrink different sizes
         //   - try at least 1 polygon that grows / shrinks non-uniformly in the x and y directions
+        let polygon1 = [
+            //center = 350, 333
+            new Vector3(150-this.scale*50, 333-this.scale*33, 1),
+            new Vector3(150+this.scale*50, 333-this.scale*33, 1),
+            new Vector3(150, 333 + this.scale*67, 1)
+        ];
+        let polygon2 = [
+            //center = 600, 325
+            new Vector3(600 - this.scale2*125, 325 - this.scale2*25, 1),
+            new Vector3(600 - this.scale2*25, 325 - this.scale2*75, 1),
+            new Vector3(600 + this.scale2 *125, 325 + this.scale2*25, 1),
+            new Vector3(600 - this.scale2*75, 325 + this.scale2*75, 1),
 
+        ];
+
+        let color1 = [255, 0, 0, 255];
+        let color2 = [0, 255, 0, 255];
+
+        this.drawConvexPolygon(polygon1, color1);
+        this.drawConvexPolygon(polygon2, color2);
 
     }
 
